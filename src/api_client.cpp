@@ -4,7 +4,7 @@
 #include <sstream>
 #include <fstream>
 
-std::string getApiKey() {
+std::string api_client::getApiKey() const {
     std::ifstream envFile("src/.env");
     std::string apiKey;
 
@@ -32,6 +32,11 @@ size_t write_callback(void* contents, size_t size, size_t nmemb, void *userp) {
 
 api_client::api_client(const std::string &base_url) : base_url(base_url) {}
 
+std::string api_client::getBaseUrl()
+ const {
+    return base_url;
+}
+
 std::string api_client::fetchData(const std::string &end_point) {
     std::string apiKey = getApiKey();
     std::string url = base_url + end_point + "?apikey=" + apiKey;
@@ -55,4 +60,3 @@ std::string api_client::fetchData(const std::string &end_point) {
     curl_easy_cleanup(curl);
     return response_data;
 }
-
