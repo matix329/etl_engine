@@ -1,5 +1,6 @@
 #include "api_client.h"
 #include "json_parser.h"
+#include "json_valid.h"
 #include <nlohmann/json.hpp>
 #include <iostream>
 
@@ -17,19 +18,11 @@ int main() {
         if (!response.empty()) {
             std::cout << "Processing data..." << std::endl;
 
-            std::vector<std::map<std::string, std::string>> filteredData = JsonParser::parseJson(response);
+            auto jsonData = nlohmann::json::parse(response);
+            JsonValidator validator("schemas/schema.json");
 
-            if (!filteredData.empty()) {
-                std::cout << "Filtered Data:" << std::endl;
-                for (const auto& stock : filteredData) {
-                    for (const auto& [key, value] : stock) {
-                        std::cout << key << ": " << value << std::endl;
-                    }
-                    std::cout << "---------------------------------" << std::endl;
-                }
-            } else {
-                std::cerr << "No valid data found for the specified exchanges!" << std::endl;
-            }
+            validator.saveValidatedData(jsonData);
+            std::cout << "All valid data has been successfully validated and saved!" << std::endl;
 
         } else {
             std::cerr << "No response or empty response from API!" << std::endl;
