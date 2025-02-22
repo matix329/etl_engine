@@ -1,7 +1,6 @@
 #include "api_client.h"
+#include "json_parser.h"
 #include <nlohmann/json.hpp>
-#include <valijson/validator.hpp>
-#include <valijson/adapters/nlohmann_json_adapter.hpp>
 #include <iostream>
 
 int main() {
@@ -16,12 +15,21 @@ int main() {
         std::string response = client.fetchData(endpoint);
 
         if (!response.empty()) {
-            std::cout << "Response from API: " << std::endl;
-            std::cout << response << std::endl;
+            std::cout << "Processing data..." << std::endl;
 
-            nlohmann::json jsonResponse = nlohmann::json::parse(response);
-            valijson::Validator validator;
-            valijson::adapters::NlohmannJsonAdapter jsonAdapter(jsonResponse);
+            std::vector<std::map<std::string, std::string>> filteredData = JsonParser::parseJson(response);
+
+            if (!filteredData.empty()) {
+                std::cout << "Filtered Data:" << std::endl;
+                for (const auto& stock : filteredData) {
+                    for (const auto& [key, value] : stock) {
+                        std::cout << key << ": " << value << std::endl;
+                    }
+                    std::cout << "---------------------------------" << std::endl;
+                }
+            } else {
+                std::cerr << "No valid data found for the specified exchanges!" << std::endl;
+            }
 
         } else {
             std::cerr << "No response or empty response from API!" << std::endl;
