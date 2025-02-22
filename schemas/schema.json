@@ -1,0 +1,16 @@
+
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Stock",
+  "type": "object",
+  "properties": {
+    "symbol": { "type": "string", "description": "Ticker symbol for the stock." },
+    "name": { "type": "string", "description": "The name of the company." },
+    "price": { "type": "number", "description": "Current stock price." },
+    "exchange": { "type": "string", "description": "Full name of the stock exchange." },
+    "exchangeShortName": { "type": "string", "description": "Short name of the stock exchange." },
+    "type": { "type": "string", "description": "Type of the financial instrument." }
+  },
+  "required": ["symbol", "name", "price", "exchange"],
+  "additionalProperties": false
+}
